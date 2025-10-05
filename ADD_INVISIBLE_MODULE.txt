@@ -1,0 +1,18 @@
+🦦 ADDING INVISIBLE MODULE TO OTTER CLIENT 🦦
+
+I'll add a fully functional Invisible module to universal.lua that:
+✅ Makes your character invisible to other players
+✅ Toggleable on/off
+✅ Works in all games
+✅ Has customization options
+
+This will be inserted after the OtterAura module definition.
+
+The Invisible module will:
+- Hide your character model
+- Make you appear invisible to others
+- Keep you visible to yourself (so you can see what you're doing)
+- Option to hide accessories
+- Option to hide tools
+
+Adding this now...
