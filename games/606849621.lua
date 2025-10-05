@@ -364,7 +364,7 @@ run(function()
 	end)
 end)
 
-for _, v in {'Reach', 'TriggerBot', 'Disabler', 'AntiFall', 'HitBoxes', 'Killaura', 'MurderMystery'} do
+for _, v in {'Reach', 'TriggerBot', 'Disabler', 'AntiFall', 'HitBoxes', 'OtterAura', 'MurderMystery'} do
 	vape:Remove(v)
 end
 run(function()

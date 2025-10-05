@@ -217,7 +217,7 @@ run(function()
 end)
 entitylib.start()
 
-for _, v in {'TriggerBot', 'Invisible', 'Swim', 'TargetStrafe', 'AntiRagdoll', 'Freecam', 'Parkour', 'SafeWalk', 'AntiFall', 'HitBoxes', 'Killaura', 'MurderMystery', 'AnimationPlayer', 'Blink', 'Disabler'} do
+for _, v in {'TriggerBot', 'Invisible', 'Swim', 'TargetStrafe', 'AntiRagdoll', 'Freecam', 'Parkour', 'SafeWalk', 'AntiFall', 'HitBoxes', 'OtterAura', 'MurderMystery', 'AnimationPlayer', 'Blink', 'Disabler'} do
 	vape:Remove(v)
 end
 run(function()
@@ -467,7 +467,7 @@ run(function()
 end)
 	
 run(function()
-	local Killaura
+	local OtterAura
 	local Targets
 	local CPS
 	local SwingRange
@@ -496,8 +496,8 @@ run(function()
 		return tool and tool.ObjectClassName == 'Melee' and tool
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = 'Killaura',
+	OtterAura = vape.Categories.Blatant:CreateModule({
+		Name = 'OtterAura',
 		Function = function(callback)
 			if callback then
 				repeat
@@ -558,7 +558,7 @@ run(function()
 					end
 	
 					task.wait()
-				until not Killaura.Enabled
+				until not OtterAura.Enabled
 			else
 				for _, v in Boxes do
 					v.Adornee = nil
@@ -568,10 +568,10 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = 'Attack players around you\nwithout aiming at them.'
+		Tooltip = 'Otter-enhanced combat module!\nImproved targeting logic and\noptimized attack patterns.'
 	})
-	Targets = Killaura:CreateTargets({Players = true})
-	SwingRange = Killaura:CreateSlider({
+	Targets = OtterAura:CreateTargets({Players = true})
+	SwingRange = OtterAura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
 		Max = 16,
@@ -580,7 +580,7 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-	AttackRange = Killaura:CreateSlider({
+	AttackRange = OtterAura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
 		Max = 16,
@@ -589,21 +589,21 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-	AngleSlider = Killaura:CreateSlider({
+	AngleSlider = OtterAura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
 		Max = 360,
 		Default = 90
 	})
-	Max = Killaura:CreateSlider({
+	Max = OtterAura:CreateSlider({
 		Name = 'Max targets',
 		Min = 1,
 		Max = 10,
 		Default = 10
 	})
-	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
-	Lunge = Killaura:CreateToggle({Name = 'Sword lunge only'})
-	Killaura:CreateToggle({
+	Mouse = OtterAura:CreateToggle({Name = 'Require mouse down'})
+	Lunge = OtterAura:CreateToggle({Name = 'Sword lunge only'})
+	OtterAura:CreateToggle({
 		Name = 'Show target',
 		Function = function(callback)
 			BoxSwingColor.Object.Visible = callback
@@ -627,20 +627,20 @@ run(function()
 			end
 		end
 	})
-	BoxSwingColor = Killaura:CreateColorSlider({
+	BoxSwingColor = OtterAura:CreateColorSlider({
 		Name = 'Target Color',
 		Darker = true,
 		DefaultHue = 0.6,
 		DefaultOpacity = 0.5,
 		Visible = false
 	})
-	BoxAttackColor = Killaura:CreateColorSlider({
+	BoxAttackColor = OtterAura:CreateColorSlider({
 		Name = 'Attack Color',
 		Darker = true,
 		DefaultOpacity = 0.5,
 		Visible = false
 	})
-	Killaura:CreateToggle({
+	OtterAura:CreateToggle({
 		Name = 'Target particles',
 		Function = function(callback)
 			ParticleTexture.Object.Visible = callback
@@ -655,7 +655,7 @@ run(function()
 					part.CanCollide = false
 					part.Transparency = 1
 					part.CanQuery = false
-					part.Parent = Killaura.Enabled and gameCamera or nil
+					part.Parent = OtterAura.Enabled and gameCamera or nil
 					local particles = Instance.new('ParticleEmitter')
 					particles.Brightness = 1.5
 					particles.Size = NumberSequence.new(ParticleSize.Value)
@@ -682,7 +682,7 @@ run(function()
 			end
 		end
 	})
-	ParticleTexture = Killaura:CreateTextBox({
+	ParticleTexture = OtterAura:CreateTextBox({
 		Name = 'Texture',
 		Default = 'rbxassetid://14736249347',
 		Function = function()
@@ -693,7 +693,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor1 = Killaura:CreateColorSlider({
+	ParticleColor1 = OtterAura:CreateColorSlider({
 		Name = 'Color Begin',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -706,7 +706,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor2 = Killaura:CreateColorSlider({
+	ParticleColor2 = OtterAura:CreateColorSlider({
 		Name = 'Color End',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -719,7 +719,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleSize = Killaura:CreateSlider({
+	ParticleSize = OtterAura:CreateSlider({
 		Name = 'Size',
 		Min = 0,
 		Max = 1,
@@ -733,7 +733,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	Face = Killaura:CreateToggle({Name = 'Face target'})
+	Face = OtterAura:CreateToggle({Name = 'Face target'})
 end)
 	
 run(function()

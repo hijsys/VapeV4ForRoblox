@@ -871,7 +871,7 @@ run(function()
 end)
 	
 run(function()
-	local Killaura
+	local OtterAura
 	local Targets
 	local SwingRange
 	local AttackRange
@@ -906,8 +906,8 @@ run(function()
 		return true, knifecheck
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = 'Killaura',
+	OtterAura = vape.Categories.Blatant:CreateModule({
+		Name = 'OtterAura',
 		Function = function(callback)
 			if callback then
 				repeat
@@ -982,7 +982,7 @@ run(function()
 					end
 	
 					task.wait()
-				until not Killaura.Enabled
+				until not OtterAura.Enabled
 			else
 				for i, v in Boxes do 
 					v.Adornee = nil 
@@ -992,10 +992,10 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = 'Attack players around you\nwithout aiming at them.'
+		Tooltip = 'Otter-powered knife combat!\nOptimized weapon detection and\ndamage prioritization system.'
 	})
-	Targets = Killaura:CreateTargets({Players = true})
-	SwingRange = Killaura:CreateSlider({
+	Targets = OtterAura:CreateTargets({Players = true})
+	SwingRange = OtterAura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
 		Max = 8,
@@ -1004,7 +1004,7 @@ run(function()
 			return val == 1 and 'stud' or 'studs' 
 		end
 	})
-	AttackRange = Killaura:CreateSlider({
+	AttackRange = OtterAura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
 		Max = 8,
@@ -1013,21 +1013,21 @@ run(function()
 			return val == 1 and 'stud' or 'studs' 
 		end
 	})
-	Angle = Killaura:CreateSlider({
+	Angle = OtterAura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
 		Max = 360,
 		Default = 360
 	})
-	Max = Killaura:CreateSlider({
+	Max = OtterAura:CreateSlider({
 		Name = 'Max targets',
 		Min = 1,
 		Max = 10,
 		Default = 10
 	})
-	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
-	Limit = Killaura:CreateToggle({Name = 'Knife only'})
-	Box = Killaura:CreateToggle({
+	Mouse = OtterAura:CreateToggle({Name = 'Require mouse down'})
+	Limit = OtterAura:CreateToggle({Name = 'Knife only'})
+	Box = OtterAura:CreateToggle({
 		Name = 'Show target',
 		Function = function(callback)
 			BoxSwingColor.Object.Visible = callback
@@ -1051,20 +1051,20 @@ run(function()
 			end
 		end
 	})
-	BoxSwingColor = Killaura:CreateColorSlider({
+	BoxSwingColor = OtterAura:CreateColorSlider({
 		Name = 'Target Color',
 		Darker = true,
 		Visible = false,
 		DefaultHue = 0.6,
 		DefaultOpacity = 0.5
 	})
-	BoxAttackColor = Killaura:CreateColorSlider({
+	BoxAttackColor = OtterAura:CreateColorSlider({
 		Name = 'Attack Color',
 		Darker = true,
 		Visible = false,
 		DefaultOpacity = 0.5
 	})
-	Particle = Killaura:CreateToggle({
+	Particle = OtterAura:CreateToggle({
 		Name = 'Target particles',
 		Function = function(callback)
 			ParticleTexture.Object.Visible = callback
@@ -1079,7 +1079,7 @@ run(function()
 					part.CanCollide = false
 					part.Transparency = 1
 					part.CanQuery = false
-					part.Parent = Killaura.Enabled and gameCamera or nil
+					part.Parent = OtterAura.Enabled and gameCamera or nil
 					local particles = Instance.new('ParticleEmitter')
 					particles.Brightness = 1.5
 					particles.Size = NumberSequence.new(ParticleSize.Value)
@@ -1106,7 +1106,7 @@ run(function()
 			end
 		end
 	})
-	ParticleTexture = Killaura:CreateTextBox({
+	ParticleTexture = OtterAura:CreateTextBox({
 		Name = 'Texture',
 		Default = 'rbxassetid://14736249347',
 		Function = function(val)
@@ -1117,7 +1117,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor1 = Killaura:CreateColorSlider({
+	ParticleColor1 = OtterAura:CreateColorSlider({
 		Name = 'Color Begin',
 		Function = function(hue, sat, val)
 			for i, v in Particles do
@@ -1130,7 +1130,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor2 = Killaura:CreateColorSlider({
+	ParticleColor2 = OtterAura:CreateColorSlider({
 		Name = 'Color End',
 		Function = function(hue, sat, val)
 			for i, v in Particles do
@@ -1143,7 +1143,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleSize = Killaura:CreateSlider({
+	ParticleSize = OtterAura:CreateSlider({
 		Name = 'Size',
 		Min = 0,
 		Max = 1,
