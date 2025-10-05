@@ -64,7 +64,7 @@ If you encounter problems:
 4. Try a different executor if issues persist
 
 ## 💬 Community & Support
-[Discord Server](https://discord.gg/5gJqhQmrdS) - Join for support and updates!
+[Discord Server](https://discord.gg/nbR79PfPBP) - Join for support and updates!
 <br/>
 [YouTube Channel](https://youtube.com/c/7GrandDadVape) - Tutorials and showcases
 

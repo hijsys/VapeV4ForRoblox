@@ -29,7 +29,7 @@ We welcome contributions to Otter Client! All contributions must be held to a ce
 Check the [documentation](https://github.com/7GrandDadPGN/VapeV4ForRoblox/wiki) for API references and module creation guides.
 
 ### Questions?
-Join our [Discord Server](https://discord.gg/5gJqhQmrdS) for help and discussions!
+Join our [Discord Server](https://discord.gg/nbR79PfPBP) for help and discussions!
 
 ---
 
