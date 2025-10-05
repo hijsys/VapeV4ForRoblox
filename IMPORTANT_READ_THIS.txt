@@ -1,0 +1,52 @@
+🦦 OTTER CLIENT - IMPORTANT SETUP INSTRUCTIONS 🦦
+
+IF YOU'RE STILL SEEING "VAPE V4" INSTEAD OF "OTTER CLIENT":
+
+YOU MUST DELETE YOUR CACHE FOLDER!
+
+====================
+📁 DELETE THIS FOLDER:
+====================
+
+In your Roblox executor folder, find and DELETE the folder called:
+   
+   "newvape"
+
+This folder contains old cached files from the original Vape V4.
+
+====================
+🔄 STEPS TO FIX:
+====================
+
+1. CLOSE Roblox completely
+2. Go to your executor folder
+3. Find and DELETE the "newvape" folder
+4. Reopen Roblox
+5. Execute the loadstring again:
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/hijsys/VapeV4ForRoblox/main/NewMainScript.lua", true))()
+
+====================
+✅ WHAT YOU SHOULD SEE:
+====================
+
+After deleting the cache and reloading, you should see:
+- Loading notification: "🦦 Otter Client Loaded!"
+- GUI version: "🦦 Otter Client 4.18"
+- Module name: "OtterAura" (not Killaura)
+
+====================
+⚠️ WHY THIS HAPPENS:
+====================
+
+The script caches files locally to load faster. If you had the old version,
+those cached files are still being used. Deleting the "newvape" folder forces
+it to download fresh files from your new Otter Client repository.
+
+====================
+💬 NEED HELP?
+====================
+
+Join our Discord: https://discord.gg/nbR79PfPBP
+
+🦦 Swim to Victory! 🦦
