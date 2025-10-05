@@ -51,7 +51,7 @@ run(function()
 
 		for name in map do
 			if not scripts[name] then
-				vape:CreateNotification('Vape', 'Unable to find script: '..name, 10, 'alert')
+				vape:CreateNotification('Otter Client', 'Unable to find script: '..name, 10, 'alert')
 				return false
 			end
 		end

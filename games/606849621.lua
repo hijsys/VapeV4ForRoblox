@@ -1,6 +1,6 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
-	if err and vape then vape:CreateNotification('Vape', 'Failed to load : '..err, 30, 'alert') end
+	if err and vape then vape:CreateNotification('Otter Client', 'Failed to load : '..err, 30, 'alert') end
 	return res
 end
 local isfile = isfile or function(file)
