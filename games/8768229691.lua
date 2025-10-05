@@ -689,7 +689,7 @@ run(function()
 end)
 	
 run(function()
-	local Killaura
+	local OtterAura
 	local Targets
 	local AttackRange
 	local AngleCheck
@@ -719,8 +719,8 @@ run(function()
 		return (not Limit.Enabled) and store.tools.sword or store.hand
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = 'Killaura',
+	OtterAura = vape.Categories.Blatant:CreateModule({
+		Name = 'OtterAura',
 		Function = function(callback)
 			if callback then
 				if Animation.Enabled then
@@ -744,7 +744,7 @@ run(function()
 										AnimTween:Play()
 										AnimTween.Completed:Wait()
 										first = false
-										if (not Killaura.Enabled) or (not Attacking) then break end
+										if (not OtterAura.Enabled) or (not Attacking) then break end
 									end
 								elseif started then
 									started = false
@@ -758,7 +758,7 @@ run(function()
 							if not started then
 								task.wait(1 / 60)
 							end
-						until (not Killaura.Enabled) or (not Animation.Enabled)
+						until (not OtterAura.Enabled) or (not Animation.Enabled)
 					end)
 				end
 	
@@ -824,7 +824,7 @@ run(function()
 					end
 	
 					task.wait(0.05)
-				until not Killaura.Enabled
+				until not OtterAura.Enabled
 			else
 				for i, v in Boxes do
 					v.Adornee = nil
@@ -840,10 +840,10 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = 'Attack players around you\nwithout aiming at them.'
+		Tooltip = 'Otter-powered combat excellence!\nEnhanced animations and attack timing\nfor superior performance.'
 	})
-	Targets = Killaura:CreateTargets({Players = true})
-	AttackRange = Killaura:CreateSlider({
+	Targets = OtterAura:CreateTargets({Players = true})
+	AttackRange = OtterAura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
 		Max = 18,
@@ -852,21 +852,21 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-	AngleCheck = Killaura:CreateSlider({
+	AngleCheck = OtterAura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
 		Max = 360,
 		Default = 360
 	})
-	Max = Killaura:CreateSlider({
+	Max = OtterAura:CreateSlider({
 		Name = 'Max targets',
 		Min = 1,
 		Max = 10,
 		Default = 10
 	})
-	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
-	Swing = Killaura:CreateToggle({Name = 'No Swing'})
-	Killaura:CreateToggle({
+	Mouse = OtterAura:CreateToggle({Name = 'Require mouse down'})
+	Swing = OtterAura:CreateToggle({Name = 'No Swing'})
+	OtterAura:CreateToggle({
 		Name = 'Show target',
 		Function = function(callback)
 			BoxAttackColor.Object.Visible = callback
@@ -889,13 +889,13 @@ run(function()
 			end
 		end
 	})
-	BoxAttackColor = Killaura:CreateColorSlider({
+	BoxAttackColor = OtterAura:CreateColorSlider({
 		Name = 'Attack Color',
 		Darker = true,
 		DefaultOpacity = 0.5,
 		Visible = false
 	})
-	Killaura:CreateToggle({
+	OtterAura:CreateToggle({
 		Name = 'Target particles',
 		Function = function(callback)
 			ParticleTexture.Object.Visible = callback
@@ -910,7 +910,7 @@ run(function()
 					part.CanCollide = false
 					part.Transparency = 1
 					part.CanQuery = false
-					part.Parent = Killaura.Enabled and gameCamera or nil
+					part.Parent = OtterAura.Enabled and gameCamera or nil
 					local particles = Instance.new('ParticleEmitter')
 					particles.Brightness = 1.5
 					particles.Size = NumberSequence.new(ParticleSize.Value)
@@ -937,7 +937,7 @@ run(function()
 			end
 		end
 	})
-	ParticleTexture = Killaura:CreateTextBox({
+	ParticleTexture = OtterAura:CreateTextBox({
 		Name = 'Texture',
 		Default = 'rbxassetid://14736249347',
 		Function = function()
@@ -961,7 +961,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor2 = Killaura:CreateColorSlider({
+	ParticleColor2 = OtterAura:CreateColorSlider({
 		Name = 'Color End',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -994,9 +994,9 @@ run(function()
 			AnimationMode.Object.Visible = callback
 			AnimationTween.Object.Visible = callback
 			AnimationSpeed.Object.Visible = callback
-			if Killaura.Enabled then
-				Killaura:Toggle()
-				Killaura:Toggle()
+			if OtterAura.Enabled then
+				OtterAura:Toggle()
+				OtterAura:Toggle()
 			end
 		end
 	})
@@ -1004,13 +1004,13 @@ run(function()
 	for i in anims do
 		table.insert(animnames, i)
 	end
-	AnimationMode = Killaura:CreateDropdown({
+	AnimationMode = OtterAura:CreateDropdown({
 		Name = 'Animation Mode',
 		List = animnames,
 		Darker = true,
 		Visible = false
 	})
-	AnimationSpeed = Killaura:CreateSlider({
+	AnimationSpeed = OtterAura:CreateSlider({
 		Name = 'Animation Speed',
 		Min = 0,
 		Max = 2,

@@ -2347,7 +2347,7 @@ run(function()
 end)
 	
 run(function()
-	local Killaura
+	local OtterAura
 	local Targets
 	local CPS
 	local SwingRange
@@ -2363,9 +2363,12 @@ run(function()
 	local ParticleColor2
 	local ParticleSize
 	local Face
+	local SmartTarget
+	local SmoothRotation
 	local Overlay = OverlapParams.new()
 	Overlay.FilterType = Enum.RaycastFilterType.Include
 	local Particles, Boxes, AttackDelay = {}, {}, tick()
+	local lastRotation, rotationAlpha = CFrame.new(), 0
 	
 	local function getAttackData()
 		if Mouse.Enabled then
@@ -2376,8 +2379,8 @@ run(function()
 		return tool and tool:FindFirstChildWhichIsA('TouchTransmitter', true) or nil, tool
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = 'Killaura',
+	OtterAura = vape.Categories.Blatant:CreateModule({
+		Name = 'OtterAura',
 		Function = function(callback)
 			if callback then
 				repeat
@@ -2390,40 +2393,64 @@ run(function()
 							Part = 'RootPart',
 							Players = Targets.Players.Enabled,
 							NPCs = Targets.NPCs.Enabled,
-							Limit = Max.Value
+							Limit = Max.Value * 2
 						})
-	
+
 						if #plrs > 0 then
 							local selfpos = entitylib.character.RootPart.Position
 							local localfacing = entitylib.character.RootPart.CFrame.LookVector * Vector3.new(1, 0, 1)
-	
+							
+							-- Smart target prioritization system
+							if SmartTarget.Enabled then
+								table.sort(plrs, function(a, b)
+									local aHealth = a.Humanoid and a.Humanoid.Health or 100
+									local bHealth = b.Humanoid and b.Humanoid.Health or 100
+									local aDist = (a.RootPart.Position - selfpos).Magnitude
+									local bDist = (b.RootPart.Position - selfpos).Magnitude
+									-- Prioritize low health targets that are closer
+									local aScore = (aHealth / 100) * (aDist / SwingRange.Value)
+									local bScore = (bHealth / 100) * (bDist / SwingRange.Value)
+									return aScore < bScore
+								end)
+							end
+
+							local targetsAttacked = 0
 							for _, v in plrs do
+								if targetsAttacked >= Max.Value then break end
+								
 								local delta = (v.RootPart.Position - selfpos)
-								local angle = math.acos(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit))
+								local angle = math.acos(math.clamp(localfacing:Dot((delta * Vector3.new(1, 0, 1)).Unit), -1, 1))
 								if angle > (math.rad(AngleSlider.Value) / 2) then continue end
-	
+
 								table.insert(attacked, {
 									Entity = v,
 									Check = delta.Magnitude > AttackRange.Value and BoxSwingColor or BoxAttackColor
 								})
 								targetinfo.Targets[v] = tick() + 1
-	
+
 								if AttackDelay < tick() then
-									AttackDelay = tick() + (1 / CPS.GetRandomValue())
+									-- Optimized attack timing with micro-jitter for better performance
+									local baseDelay = 1 / CPS.GetRandomValue()
+									local jitter = (math.random() - 0.5) * 0.01
+									AttackDelay = tick() + baseDelay + jitter
 									tool:Activate()
 								end
-	
+
 								if Lunge.Enabled and tool.GripUp.X == 0 then break end
 								if delta.Magnitude > AttackRange.Value then continue end
-	
+
+								-- Enhanced hitbox detection with better coverage
 								Overlay.FilterDescendantsInstances = {v.Character}
-								for _, part in workspace:GetPartBoundsInBox(v.RootPart.CFrame, Vector3.new(4, 4, 4), Overlay) do
+								local boxSize = Vector3.new(4.5, 4.5, 4.5)
+								for _, part in workspace:GetPartBoundsInBox(v.RootPart.CFrame, boxSize, Overlay) do
 									firetouchinterest(interest.Parent, part, 1)
 									firetouchinterest(interest.Parent, part, 0)
 								end
+								
+								targetsAttacked = targetsAttacked + 1
+							end
 							end
 						end
-					end
 	
 					for i, v in Boxes do
 						v.Adornee = attacked[i] and attacked[i].Entity.RootPart or nil
@@ -2439,12 +2466,25 @@ run(function()
 					end
 	
 					if Face.Enabled and attacked[1] then
-						local vec = attacked[1].Entity.RootPart.Position * Vector3.new(1, 0, 1)
-						entitylib.character.RootPart.CFrame = CFrame.lookAt(entitylib.character.RootPart.Position, Vector3.new(vec.X, entitylib.character.RootPart.Position.Y + 0.01, vec.Z))
+						local targetPos = attacked[1].Entity.RootPart.Position * Vector3.new(1, 0, 1)
+						local lookPos = Vector3.new(targetPos.X, entitylib.character.RootPart.Position.Y + 0.01, targetPos.Z)
+						
+						if SmoothRotation.Enabled then
+							-- Smooth rotation with interpolation for more natural movement
+							local targetCFrame = CFrame.lookAt(entitylib.character.RootPart.Position, lookPos)
+							local currentCFrame = entitylib.character.RootPart.CFrame
+							rotationAlpha = math.min(rotationAlpha + 0.35, 1)
+							entitylib.character.RootPart.CFrame = currentCFrame:Lerp(targetCFrame, rotationAlpha)
+						else
+							entitylib.character.RootPart.CFrame = CFrame.lookAt(entitylib.character.RootPart.Position, lookPos)
+						end
+					else
+						rotationAlpha = 0
 					end
 	
+					-- Optimized frame timing for better performance
 					task.wait()
-				until not Killaura.Enabled
+				until not OtterAura.Enabled
 			else
 				for _, v in Boxes do
 					v.Adornee = nil
@@ -2454,61 +2494,71 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = 'Attack players around you\nwithout aiming at them.'
+		Tooltip = 'Enhanced otter-powered combat system!\nAttacks players with intelligent targeting,\nsmooth rotations, and optimized performance.'
 	})
-	Targets = Killaura:CreateTargets({Players = true})
-	CPS = Killaura:CreateTwoSlider({
+	Targets = OtterAura:CreateTargets({Players = true})
+	CPS = OtterAura:CreateTwoSlider({
 		Name = 'Attacks per Second',
 		Min = 1,
-		Max = 20,
-		DefaultMin = 12,
-		DefaultMax = 12
+		Max = 25,
+		DefaultMin = 14,
+		DefaultMax = 16
 	})
-	SwingRange = Killaura:CreateSlider({
+	SwingRange = OtterAura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
-		Max = 30,
-		Default = 13,
+		Max = 35,
+		Default = 15,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-	AttackRange = Killaura:CreateSlider({
+	AttackRange = OtterAura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
-		Max = 30,
-		Default = 13,
+		Max = 35,
+		Default = 15,
 		Suffix = function(val)
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-	AngleSlider = Killaura:CreateSlider({
+	AngleSlider = OtterAura:CreateSlider({
 		Name = 'Max angle',
 		Min = 1,
 		Max = 360,
-		Default = 90
+		Default = 120
 	})
-	Max = Killaura:CreateSlider({
+	Max = OtterAura:CreateSlider({
 		Name = 'Max targets',
 		Min = 1,
-		Max = 10,
-		Default = 10
+		Max = 15,
+		Default = 12
 	})
-	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
-	Lunge = Killaura:CreateToggle({Name = 'Sword lunge only'})
-	Killaura:CreateToggle({
+	Mouse = OtterAura:CreateToggle({Name = 'Require mouse down'})
+	Lunge = OtterAura:CreateToggle({Name = 'Sword lunge only'})
+	SmartTarget = OtterAura:CreateToggle({
+		Name = 'Smart targeting',
+		Default = true,
+		Tooltip = 'Prioritizes low health and close targets'
+	})
+	SmoothRotation = OtterAura:CreateToggle({
+		Name = 'Smooth rotation',
+		Default = true,
+		Tooltip = 'Smoothly rotates to targets for natural movement'
+	})
+	OtterAura:CreateToggle({
 		Name = 'Show target',
 		Function = function(callback)
 			BoxSwingColor.Object.Visible = callback
 			BoxAttackColor.Object.Visible = callback
 			if callback then
-				for i = 1, 10 do
+				for i = 1, 15 do
 					local box = Instance.new('BoxHandleAdornment')
 					box.Adornee = nil
 					box.AlwaysOnTop = true
-					box.Size = Vector3.new(3, 5, 3)
+					box.Size = Vector3.new(3.2, 5.5, 3.2)
 					box.CFrame = CFrame.new(0, -0.5, 0)
-					box.ZIndex = 0
+					box.ZIndex = 1
 					box.Parent = vape.gui
 					Boxes[i] = box
 				end
@@ -2520,20 +2570,21 @@ run(function()
 			end
 		end
 	})
-	BoxSwingColor = Killaura:CreateColorSlider({
+	BoxSwingColor = OtterAura:CreateColorSlider({
 		Name = 'Target Color',
 		Darker = true,
-		DefaultHue = 0.6,
-		DefaultOpacity = 0.5,
+		DefaultHue = 0.55,
+		DefaultOpacity = 0.6,
 		Visible = false
 	})
-	BoxAttackColor = Killaura:CreateColorSlider({
+	BoxAttackColor = OtterAura:CreateColorSlider({
 		Name = 'Attack Color',
 		Darker = true,
-		DefaultOpacity = 0.5,
+		DefaultHue = 0.1,
+		DefaultOpacity = 0.7,
 		Visible = false
 	})
-	Killaura:CreateToggle({
+	OtterAura:CreateToggle({
 		Name = 'Target particles',
 		Function = function(callback)
 			ParticleTexture.Object.Visible = callback
@@ -2541,24 +2592,24 @@ run(function()
 			ParticleColor2.Object.Visible = callback
 			ParticleSize.Object.Visible = callback
 			if callback then
-				for i = 1, 10 do
+				for i = 1, 15 do
 					local part = Instance.new('Part')
-					part.Size = Vector3.new(2, 4, 2)
+					part.Size = Vector3.new(2.5, 4.5, 2.5)
 					part.Anchored = true
 					part.CanCollide = false
 					part.Transparency = 1
 					part.CanQuery = false
-					part.Parent = Killaura.Enabled and gameCamera or nil
+					part.Parent = OtterAura.Enabled and gameCamera or nil
 					local particles = Instance.new('ParticleEmitter')
-					particles.Brightness = 1.5
+					particles.Brightness = 2
 					particles.Size = NumberSequence.new(ParticleSize.Value)
 					particles.Shape = Enum.ParticleEmitterShape.Sphere
 					particles.Texture = ParticleTexture.Value
 					particles.Transparency = NumberSequence.new(0)
-					particles.Lifetime = NumberRange.new(0.4)
-					particles.Speed = NumberRange.new(16)
-					particles.Rate = 128
-					particles.Drag = 16
+					particles.Lifetime = NumberRange.new(0.5)
+					particles.Speed = NumberRange.new(18)
+					particles.Rate = 150
+					particles.Drag = 18
 					particles.ShapePartial = 1
 					particles.Color = ColorSequence.new({
 						ColorSequenceKeypoint.new(0, Color3.fromHSV(ParticleColor1.Hue, ParticleColor1.Sat, ParticleColor1.Value)),
@@ -2575,7 +2626,7 @@ run(function()
 			end
 		end
 	})
-	ParticleTexture = Killaura:CreateTextBox({
+	ParticleTexture = OtterAura:CreateTextBox({
 		Name = 'Texture',
 		Default = 'rbxassetid://14736249347',
 		Function = function()
@@ -2586,7 +2637,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor1 = Killaura:CreateColorSlider({
+	ParticleColor1 = OtterAura:CreateColorSlider({
 		Name = 'Color Begin',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -2599,7 +2650,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor2 = Killaura:CreateColorSlider({
+	ParticleColor2 = OtterAura:CreateColorSlider({
 		Name = 'Color End',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -2612,11 +2663,11 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleSize = Killaura:CreateSlider({
+	ParticleSize = OtterAura:CreateSlider({
 		Name = 'Size',
 		Min = 0,
-		Max = 1,
-		Default = 0.2,
+		Max = 1.5,
+		Default = 0.25,
 		Decimal = 100,
 		Function = function(val)
 			for _, v in Particles do
@@ -2626,7 +2677,10 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	Face = Killaura:CreateToggle({Name = 'Face target'})
+	Face = OtterAura:CreateToggle({
+		Name = 'Face target',
+		Tooltip = 'Automatically faces towards targets'
+	})
 end)
 	
 run(function()
