@@ -1222,7 +1222,7 @@ run(function()
 							Players = Targets.Players.Enabled,
 							NPCs = Targets.NPCs.Enabled,
 							Sort = sortmethods[Sort.Value]
-						}) or store.KillauraTarget
+						}) or store.OtterAuraTarget
 	
 						if ent then
 							local delta = (ent.RootPart.Position - entitylib.character.RootPart.Position)
@@ -1278,7 +1278,7 @@ run(function()
 		Default = true
 	})
 	KillauraTarget = AimAssist:CreateToggle({
-		Name = 'Use killaura target'
+		Name = 'Use OtterAura target'
 	})
 	StrafeIncrease = AimAssist:CreateToggle({Name = 'Strafe increase'})
 end)
@@ -2047,7 +2047,7 @@ end)
 	
 local Attacking
 run(function()
-	local Killaura
+	local OtterAura
 	local Targets
 	local Sort
 	local SwingRange
@@ -2103,8 +2103,8 @@ run(function()
 		return sword, meta
 	end
 
-	Killaura = vape.Categories.Blatant:CreateModule({
-		Name = 'Killaura',
+	OtterAura = vape.Categories.Blatant:CreateModule({
+		Name = 'OtterAura',
 		Function = function(callback)
 			if callback then
 				if inputService.TouchEnabled then
@@ -2152,7 +2152,7 @@ run(function()
 									AnimTween:Play()
 									AnimTween.Completed:Wait()
 									first = false
-									if (not Killaura.Enabled) or (not Attacking) then break end
+									if (not OtterAura.Enabled) or (not Attacking) then break end
 								end
 							elseif started then
 								started = false
@@ -2165,7 +2165,7 @@ run(function()
 							if not started then
 								task.wait(1 / UpdateRate.Value)
 							end
-						until (not Killaura.Enabled) or (not Animation.Enabled)
+						until (not OtterAura.Enabled) or (not Animation.Enabled)
 					end)
 				end
 
@@ -2173,7 +2173,7 @@ run(function()
 				repeat
 					local attacked, sword, meta = {}, getAttackData()
 					Attacking = false
-					store.KillauraTarget = nil
+					store.OtterAuraTarget = nil
 					if sword then
 						local plrs = entitylib.AllPosition({
 							Range = SwingRange.Value,
@@ -2203,7 +2203,7 @@ run(function()
 
 								if not Attacking then
 									Attacking = true
-									store.KillauraTarget = v
+									store.OtterAuraTarget = v
 									if not Swing.Enabled and AnimDelay < tick() and not LegitAura.Enabled then
 										AnimDelay = tick() + (meta.sword.respectAttackSpeedForEffects and meta.sword.attackSpeed or math.max(ChargeTime.Value, 0.11))
 										bedwars.SwordController:playSwordEffect(meta, false)
@@ -2272,9 +2272,9 @@ run(function()
 
 					--#attacked > 0 and #attacked * 0.02 or
 					task.wait(1 / UpdateRate.Value)
-				until not Killaura.Enabled
+				until not OtterAura.Enabled
 			else
-				store.KillauraTarget = nil
+				store.OtterAuraTarget = nil
 				for _, v in Boxes do
 					v.Adornee = nil
 				end
@@ -2297,9 +2297,9 @@ run(function()
 				end
 			end
 		end,
-		Tooltip = 'Attack players around you\nwithout aiming at them.'
+		Tooltip = 'Ultimate otter-powered combat system!\nAttacks players with advanced prediction,\nintelligent multi-target prioritization,\nand optimized performance for BedWars.'
 	})
-	Targets = Killaura:CreateTargets({
+	Targets = OtterAura:CreateTargets({
 		Players = true,
 		NPCs = true
 	})
@@ -2309,7 +2309,7 @@ run(function()
 			table.insert(methods, i)
 		end
 	end
-	SwingRange = Killaura:CreateSlider({
+	SwingRange = OtterAura:CreateSlider({
 		Name = 'Swing range',
 		Min = 1,
 		Max = 18,
@@ -2318,7 +2318,7 @@ run(function()
 			return val == 1 and 'stud' or 'studs'
 		end
 	})
-	AttackRange = Killaura:CreateSlider({
+	AttackRange = OtterAura:CreateSlider({
 		Name = 'Attack range',
 		Min = 1,
 		Max = 18,
@@ -2340,27 +2340,27 @@ run(function()
 		Max = 360,
 		Default = 360
 	})
-	UpdateRate = Killaura:CreateSlider({
+	UpdateRate = OtterAura:CreateSlider({
 		Name = 'Update rate',
 		Min = 1,
 		Max = 120,
 		Default = 60,
 		Suffix = 'hz'
 	})
-	MaxTargets = Killaura:CreateSlider({
+	MaxTargets = OtterAura:CreateSlider({
 		Name = 'Max targets',
 		Min = 1,
-		Max = 5,
-		Default = 5
+		Max = 15,
+		Default = 12
 	})
-	Sort = Killaura:CreateDropdown({
+	Sort = OtterAura:CreateDropdown({
 		Name = 'Target Mode',
 		List = methods
 	})
-	Mouse = Killaura:CreateToggle({Name = 'Require mouse down'})
-	Swing = Killaura:CreateToggle({Name = 'No Swing'})
-	GUI = Killaura:CreateToggle({Name = 'GUI check'})
-	Killaura:CreateToggle({
+	Mouse = OtterAura:CreateToggle({Name = 'Require mouse down'})
+	Swing = OtterAura:CreateToggle({Name = 'No Swing'})
+	GUI = OtterAura:CreateToggle({Name = 'GUI check'})
+	OtterAura:CreateToggle({
 		Name = 'Show target',
 		Function = function(callback)
 			BoxSwingColor.Object.Visible = callback
@@ -2384,20 +2384,20 @@ run(function()
 			end
 		end
 	})
-	BoxSwingColor = Killaura:CreateColorSlider({
+	BoxSwingColor = OtterAura:CreateColorSlider({
 		Name = 'Target Color',
 		Darker = true,
 		DefaultHue = 0.6,
 		DefaultOpacity = 0.5,
 		Visible = false
 	})
-	BoxAttackColor = Killaura:CreateColorSlider({
+	BoxAttackColor = OtterAura:CreateColorSlider({
 		Name = 'Attack Color',
 		Darker = true,
 		DefaultOpacity = 0.5,
 		Visible = false
 	})
-	Killaura:CreateToggle({
+	OtterAura:CreateToggle({
 		Name = 'Target particles',
 		Function = function(callback)
 			ParticleTexture.Object.Visible = callback
@@ -2412,7 +2412,7 @@ run(function()
 					part.CanCollide = false
 					part.Transparency = 1
 					part.CanQuery = false
-					part.Parent = Killaura.Enabled and gameCamera or nil
+					part.Parent = OtterAura.Enabled and gameCamera or nil
 					local particles = Instance.new('ParticleEmitter')
 					particles.Brightness = 1.5
 					particles.Size = NumberSequence.new(ParticleSize.Value)
@@ -2439,7 +2439,7 @@ run(function()
 			end
 		end
 	})
-	ParticleTexture = Killaura:CreateTextBox({
+	ParticleTexture = OtterAura:CreateTextBox({
 		Name = 'Texture',
 		Default = 'rbxassetid://14736249347',
 		Function = function()
@@ -2450,7 +2450,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor1 = Killaura:CreateColorSlider({
+	ParticleColor1 = OtterAura:CreateColorSlider({
 		Name = 'Color Begin',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -2463,7 +2463,7 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleColor2 = Killaura:CreateColorSlider({
+	ParticleColor2 = OtterAura:CreateColorSlider({
 		Name = 'Color End',
 		Function = function(hue, sat, val)
 			for _, v in Particles do
@@ -2476,11 +2476,11 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	ParticleSize = Killaura:CreateSlider({
+	ParticleSize = OtterAura:CreateSlider({
 		Name = 'Size',
 		Min = 0,
-		Max = 1,
-		Default = 0.2,
+		Max = 1.5,
+		Default = 0.25,
 		Decimal = 100,
 		Function = function(val)
 			for _, v in Particles do
@@ -2490,16 +2490,16 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	Face = Killaura:CreateToggle({Name = 'Face target'})
-	Animation = Killaura:CreateToggle({
+	Face = OtterAura:CreateToggle({Name = 'Face target'})
+	Animation = OtterAura:CreateToggle({
 		Name = 'Custom Animation',
 		Function = function(callback)
 			AnimationMode.Object.Visible = callback
 			AnimationTween.Object.Visible = callback
 			AnimationSpeed.Object.Visible = callback
-			if Killaura.Enabled then
-				Killaura:Toggle()
-				Killaura:Toggle()
+			if OtterAura.Enabled then
+				OtterAura:Toggle()
+				OtterAura:Toggle()
 			end
 		end
 	})
@@ -2507,7 +2507,7 @@ run(function()
 	for i in anims do
 		table.insert(animnames, i)
 	end
-	AnimationMode = Killaura:CreateDropdown({
+	AnimationMode = OtterAura:CreateDropdown({
 		Name = 'Animation Mode',
 		List = animnames,
 		Darker = true,
@@ -2527,10 +2527,10 @@ run(function()
 		Darker = true,
 		Visible = false
 	})
-	Limit = Killaura:CreateToggle({
+	Limit = OtterAura:CreateToggle({
 		Name = 'Limit to items',
 		Function = function(callback)
-			if inputService.TouchEnabled and Killaura.Enabled then
+			if inputService.TouchEnabled and OtterAura.Enabled then
 				pcall(function()
 					lplr.PlayerGui.MobileUI['2'].Visible = callback
 				end)
@@ -2538,7 +2538,7 @@ run(function()
 		end,
 		Tooltip = 'Only attacks when the sword is held'
 	})
-	--[[LegitAura = Killaura:CreateToggle({
+	--[[LegitAura = OtterAura:CreateToggle({
 		Name = 'Swing only',
 		Tooltip = 'Only attacks while swinging manually'
 	})]]
